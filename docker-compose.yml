@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: helpdesk-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: helpdesk
+      POSTGRES_PASSWORD: helpdesk123
+      POSTGRES_DB: helpdesk
+    ports:
+      - "5432:5432"
+    volumes:
+      - helpdesk_data:/var/lib/postgresql/data
+
+volumes:
+  helpdesk_data:
