@@ -53,7 +53,26 @@ Controller  →  recebe a requisição HTTP e chama o service
 Service     →  contém a lógica de verdade (regras, banco, etc)
 ```
 
+## Receita — ordem de criação de qualquer módulo
+
+Sempre nessa ordem:
+
+```
+1. Service     → escreve a lógica (regras, banco, etc)
+2. Controller  → escreve as rotas que chamam o service
+3. Module      → registra os dois e importa o que precisar
+```
+
+Perguntas pra guiar:
+
+```
+"O que essa funcionalidade precisa fazer?"  →  escreve no service
+"Qual rota vai chamar isso?"                →  escreve no controller
+"Esse módulo precisa de outro módulo?"      →  importa no module
+```
+
 **Módulo é configuração, não execução.** Ele não processa requisição nenhuma — ele roda na inicialização e diz pro NestJS o que existe e quem depende de quem.
+
 
 Fluxo de uma requisição:
 

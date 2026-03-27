@@ -16,4 +16,17 @@ export class UsersService {
     const { password: _, ...userWithoutPassword } = user
     return userWithoutPassword
   }
+
+  async findMe(userId: number) {
+    const user = await this.prisma.db.user.findUnique({
+      where: { id: userId }
+    })
+  
+    if (!user) {
+      throw new Error('Usuário não encontrado')
+    }
+  
+    const { password: _, ...userWithoutPassword } = user
+    return userWithoutPassword
+  }
 }
