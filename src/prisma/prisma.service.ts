@@ -18,6 +18,8 @@ export class PrismaService implements OnModuleInit {
 
   async onModuleInit() {
     await this.client.$connect()
+    await this.client.user.findFirst()
+    console.log('✅ Banco conectado')
   }
 
   get db() {

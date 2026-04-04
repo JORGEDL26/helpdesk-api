@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Body, Param, Request, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Body, Param, Request, UseGuards, Delete } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { CreateTicketDto } from './dto/create-ticket.dto';
@@ -25,6 +25,11 @@ export class TicketsController {
   @Get()
   findAll(@Request() req: any) {
     return this.ticketsService.findAll(req.user.role)
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string, @Request() req: any) {
+    return this.ticketsService.remove(Number(id), req.user.sub)
   }
 
   @Patch(':id')

@@ -1,4 +1,4 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -8,6 +8,21 @@ export class TicketsService {
   async create(title: string, description: string, userId: number) {
     return this.prisma.db.ticket.create({
       data: { title, description, userId }
+    })
+  }
+
+  async remove(id:number, userId: number) {
+    const ticket= await this.prisma.db.ticket.findUnique({
+      where: { id }
+    })
+    if (!ticket) {
+      throw new NotFoundException('Ticket não encontrado')
+    }
+    if (ticket.userId !== userId) {
+      throw new ForbiddenException('Acesso negado')
+    }
+    return this.prisma.db.ticket.delete({
+      where: { id }
     })
   }
 
