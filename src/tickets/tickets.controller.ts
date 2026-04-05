@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Body, Param, Request, UseGuards, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Body, Param, Request, UseGuards, Delete, Query } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { CreateTicketDto } from './dto/create-ticket.dto';
@@ -22,14 +22,24 @@ export class TicketsController {
     return this.ticketsService.findMine(req.user.sub)
   }
 
-  @Get()
-  findAll(@Request() req: any) {
-    return this.ticketsService.findAll(req.user.role)
-  }
-
   @Delete(':id')
   remove(@Param('id') id: string, @Request() req: any) {
     return this.ticketsService.remove(Number(id), req.user.sub)
+  }
+
+  @Get() 
+  findAll(@Query('status') status: string, @Request() req: any) {
+    return this.ticketsService.findAll(status, req.user.role)
+  }
+
+  @Delete(':id') 
+  deleteTicket(@Param('id') id:string, @Request() req: any) {
+    return this.ticketsService.deleteTicket(Number(id), req.user.sub)
+  }
+
+  @Patch(':id/assign')
+  assignTicket(@Param('id') id: string, @Request() req: any) {
+    return this.ticketsService.assignTicket(Number(id), req.user.sub, req.user.role)
   }
 
   @Patch(':id')
@@ -37,7 +47,8 @@ export class TicketsController {
     @Param('id') id: string,
     @Body() body: UpdateTicketDto,
     @Request() req: any
-  ) {
+  ) 
+  {
     return this.ticketsService.updateStatus(Number(id), body.status, req.user.role)
   }
 }
